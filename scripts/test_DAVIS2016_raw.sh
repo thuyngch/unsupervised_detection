@@ -2,11 +2,11 @@
 
 # Script to compute raw results (before post-processing)
 
-CKPT_FILE='/path/to/davis2016_ckpt/'
-DATASET_FILE='/path/to/DAVIS_2016/'
-PWC_CKPT_FILE='/path/to/pwc_ckpt/'
+CKPT_FILE='/home/member/Workspace/thuync/checkpoints/pwc/unsupervised_detection_models/davis_best_model/'
+DATASET_FILE='/home/member/Workspace/dataset/DAVIS2017/'
+PWC_CKPT_FILE='/home/member/Workspace/thuync/checkpoints/pwc/pwcnet/'
 
-python3 test_generator.py \
+python test_generator.py \
 --dataset=DAVIS2016 \
 --ckpt_file=$CKPT_FILE \
 --flow_ckpt=$PWC_CKPT_FILE \

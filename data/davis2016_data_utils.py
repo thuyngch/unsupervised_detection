@@ -12,21 +12,24 @@ class DirectoryIterator(object):
     def __init__(self, directory, part='train'):
         self.directory = directory
 
-        name_division ={'train': 'ImageSets/480p/train.txt',
-                        'val' : 'ImageSets/480p/val.txt',
-                        'trainval': 'ImageSets/480p/trainval.txt'}
+        name_division = {'train': 'ImageSets/2016/train.txt',
+                         'val' : 'ImageSets/2016/val.txt',
+                         'trainval': 'ImageSets/2016/trainval.txt'}
+
         part_file = os.path.join(directory, name_division.get(part))
+        print("part_file:", part_file)
         if not os.path.isfile(part_file):
             raise IOError("Partition file not found")
+
         self.components = np.loadtxt(part_file, dtype=np.str)
 
         # First count how many experiments are out there
         self.samples = 0
+
         # Each filename is a tuple image / components
         self.image_filenames = []
         self.annotation_filenames = []
         self._parse_components(self.components)
-
 
         if self.samples == 0:
             raise IOError("Did not find any file in the dataset folder")
@@ -34,7 +37,6 @@ class DirectoryIterator(object):
 
         print('Found {} images belonging to {} experiments.'.format(
                 self.samples, self.num_experiments))
-
 
     def _parse_components(self, components):
         """
@@ -46,8 +48,9 @@ class DirectoryIterator(object):
         current_filenames = None
         current_annotations = None
         for string in components:
+            print("string:", string)
             folder_name = string[0].split('/')[3]
-
+            folder_name = string[0].split('/')[3]
 
             if folder_name != current_experiment:
                 current_experiment = folder_name
@@ -60,6 +63,7 @@ class DirectoryIterator(object):
             current_filenames.append(os.path.join(self.directory, string[0][1:]))
             current_annotations.append(os.path.join(self.directory,string[1][1:]))
             self.samples += 1
+
         # Append the last
         self.image_filenames.append(current_filenames)
         self.annotation_filenames.append(current_annotations)
@@ -228,7 +232,6 @@ class Davis2016Reader(object):
 
         return (img1s, img2s, tf.constant(1.0)), iterator
 
-
     def test_inputs(self, batch_size=32, partition='val', t_len=2, with_fname=False,
                     test_crop=1.0):
         """Reads batches at test time.
@@ -289,7 +292,6 @@ class Davis2016Reader(object):
         if with_fname:
             return (img1s, img2s, seg1s, fnames), iterator
         return (img1s, img2s, seg1s), iterator
-
 
     def test_dataset_map(self, input_queue):
         '''
